@@ -1,0 +1,86 @@
+﻿<Window x:Class="ArduReader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArduReader"
+        mc:Ignorable="d"
+        Title="ArduReader" Height="450" Width="800">
+    <Grid>
+        <TextBox
+            TextWrapping="Wrap"
+            AcceptsReturn="True"
+            HorizontalAlignment="Left" 
+            Margin="10,61,0,0"
+            Text="{Binding Data}"
+            VerticalAlignment="Top" 
+            Width="758" Height="363" 
+            ScrollViewer.CanContentScroll="True"/>
+        <Button 
+            Content="Export Connection.Data" 
+            HorizontalAlignment="Left" 
+            Margin="675,36,0,0" 
+            VerticalAlignment="Top" 
+            Width="76"/>
+        <Button 
+            Content="Import Data" 
+            HorizontalAlignment="Left" 
+            Margin="595,36,0,0" 
+            VerticalAlignment="Top" 
+            Width="76" />
+        <Label 
+            Content="COM port:"
+            HorizontalAlignment="Left" 
+            Margin="10,10,0,0" 
+            VerticalAlignment="Top"/>
+         <Label 
+            Content="Connection Status:"
+            HorizontalAlignment="Left" 
+            Margin="10,35,0,0" 
+            VerticalAlignment="Top"/>
+        <Label 
+            Content="{Binding Message}"
+            HorizontalAlignment="Left" 
+            Margin="110,35,0,0" 
+            VerticalAlignment="Top"/>
+        <ComboBox 
+            ItemsSource="{Binding ports}"
+            SelectedItem="{Binding Connection.ComPort}"
+            HorizontalAlignment="Left" 
+            Margin="75,12,0,0" 
+            VerticalAlignment="Top" 
+            Width="120"/>
+        <Label 
+            Content="Baud Rate:" 
+            HorizontalAlignment="Left" 
+            Margin="200,10,0,0" 
+            VerticalAlignment="Top"/>
+        <ComboBox 
+            ItemsSource="{Binding baudrate}"
+            SelectedItem="{Binding Connection.BaudRate}" 
+            HorizontalAlignment="Left" 
+            Margin="266,12,0,0" 
+            VerticalAlignment="Top" 
+            Width="120"/>
+        <Button Content="Connect"
+            Command="{Binding ConnectCommand}"
+            HorizontalAlignment="Left" 
+            Margin="388,13,0,0" 
+            VerticalAlignment="Top" 
+            RenderTransformOrigin="-0.211,-0.048" />
+        <Button Content="Refresh"
+            Command="{Binding RefreshCommand}" 
+            HorizontalAlignment="Left" 
+            Margin="438,13,0,0" 
+            VerticalAlignment="Top" 
+            RenderTransformOrigin="-0.211,-0.048" />
+        <RadioButton Content="On" 
+            HorizontalAlignment="Left" 
+            Margin="495,11,0,0" 
+            VerticalAlignment="Top" />
+        <RadioButton Content="Off" 
+            HorizontalAlignment="Left" 
+            Margin="550,11,0,0" 
+            VerticalAlignment="Top" />
+    </Grid>
+</Window>
