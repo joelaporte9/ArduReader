@@ -1,7 +1,6 @@
 ﻿using System.Windows;
-using System.Windows.Threading;
-using ArduReader.Models;
 using ArduReader.ViewModels;
+
 
 namespace ArduReader;
 
@@ -10,17 +9,12 @@ namespace ArduReader;
 /// </summary>
 public partial class MainWindow : Window
 {
-    
-    private MainViewModel _viewModels;
-    
+    private MainViewModel viewModels;
     public MainWindow()
     {
         InitializeComponent();
-    
-        _viewModels = new MainViewModel();
-        DataContext = _viewModels;
-
-       
+        viewModels = new MainViewModel();
+        DataContext = viewModels;
     }
 }
 

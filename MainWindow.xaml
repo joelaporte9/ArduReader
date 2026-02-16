@@ -17,7 +17,7 @@
             Width="758" Height="363" 
             ScrollViewer.CanContentScroll="True"/>
         <Button 
-            Content="Export Connection.Data" 
+            Content="Export Data" 
             HorizontalAlignment="Left" 
             Margin="675,36,0,0" 
             VerticalAlignment="Top" 
@@ -39,6 +39,7 @@
             Margin="10,35,0,0" 
             VerticalAlignment="Top"/>
         <Label 
+            x:Name="lblMsg" 
             Content="{Binding Message}"
             HorizontalAlignment="Left" 
             Margin="110,35,0,0" 
@@ -62,25 +63,51 @@
             Margin="266,12,0,0" 
             VerticalAlignment="Top" 
             Width="120"/>
-        <Button Content="Connect"
-            Command="{Binding ConnectCommand}"
-            HorizontalAlignment="Left" 
-            Margin="388,13,0,0" 
-            VerticalAlignment="Top" 
-            RenderTransformOrigin="-0.211,-0.048" />
-        <Button Content="Refresh"
+        
+
+        <!-- <Button Content="Refresh"
             Command="{Binding RefreshCommand}" 
             HorizontalAlignment="Left" 
             Margin="438,13,0,0" 
             VerticalAlignment="Top" 
+            RenderTransformOrigin="-0.211,-0.048" /> -->
+
+        <Label 
+            Content="Device:" 
+            HorizontalAlignment="Left" 
+            Margin="385,10,0,0" 
+            VerticalAlignment="Top"/>
+        <ComboBox
+            ItemsSource="{Binding devicenames}"
+            SelectedItem="{Binding Connection.DeviceName}" 
+            HorizontalAlignment="Left" 
+            Margin="430,12,0,0" 
+            VerticalAlignment="Top" 
+            Width="100"/>
+        <Button Content="Connect"
+            Command="{Binding ConnectCommand}"
+            HorizontalAlignment="Left" 
+            Margin="530,13,0,0" 
+            VerticalAlignment="Top" 
             RenderTransformOrigin="-0.211,-0.048" />
+        <Button Content="Read Data"
+            Command="{Binding DataCommand}"
+            HorizontalAlignment="Left" 
+            Margin="530,36,0,0" 
+            VerticalAlignment="Top" 
+            RenderTransformOrigin="-0.211,-0.048" />
+        <Label 
+            Content="Device State:" 
+            HorizontalAlignment="Left" 
+            Margin="585,4,0,0" 
+            VerticalAlignment="Top"/>
         <RadioButton Content="On" 
             HorizontalAlignment="Left" 
-            Margin="495,11,0,0" 
+            Margin="660,11,0,0" 
             VerticalAlignment="Top" />
         <RadioButton Content="Off" 
             HorizontalAlignment="Left" 
-            Margin="550,11,0,0" 
+            Margin="700,11,0,0" 
             VerticalAlignment="Top" />
     </Grid>
 </Window>
