@@ -6,7 +6,6 @@ namespace ArduReader.Models
     public class Connection
     {
         public SerialPort? serialPort;
-        public string? ComPort {get; set;}
         public int BaudRate {get; set;}
         public string? DeviceName {get; set;}
         public Connection()
@@ -15,9 +14,14 @@ namespace ArduReader.Models
         public void OpenSerialCommunication()
         {
             try
-            {
-                serialPort = new SerialPort(ComPort, BaudRate);
-                serialPort.Open();
+            {   
+                if(DeviceName != null)
+                {
+                    string comport = DeviceName.Substring(0,4);
+                    serialPort = new SerialPort(comport, BaudRate);
+                    serialPort.Open();
+                }
+               
             }
             catch (System.Exception e)
             {
