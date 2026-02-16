@@ -9,7 +9,6 @@ namespace ArduReader.Models
 
         public List<string> GetDeviceNames()
         {
-        
             using (var devices = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort"))
             {
                 string[] portnames = SerialPort.GetPortNames();

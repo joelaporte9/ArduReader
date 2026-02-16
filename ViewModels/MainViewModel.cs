@@ -1,5 +1,5 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO.Ports;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -12,7 +12,6 @@ namespace ArduReader.ViewModels
     {   
         DispatcherTimer? dispatcherTimer;
         int intervalCount = 1;
-        public string[] ports {get; set;} = SerialPort.GetPortNames();
         public int [] baudrate {get; set;} = new [] {75, 150, 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400};
         public Connection Connection { get; set; } = new Connection();
         public List<string> devicenames {get; set; }
@@ -32,16 +31,7 @@ namespace ArduReader.ViewModels
             }
         }
         public  string? data;
-        public string? Data
-        {
-            get => data;
-            set
-            {
-                data = value;
-                OnPropertyChanged(nameof(Data));
-            }
-        }
-
+        public ObservableCollection<string> Data { get; set; } = new ObservableCollection<string>();
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public MainViewModel()
@@ -58,11 +48,11 @@ namespace ArduReader.ViewModels
             try
             {
                 Connection.OpenSerialCommunication();
-                Message = $"Connected to: {Connection.DeviceName} at:{DateTime.Now}";
+                Message = $"Connected - {Connection.DeviceName} at: {DateTime.Now}";
             }
             catch (System.Exception)
             {
-                Message = $"Unable to connect to COM port. Last attempt: {DateTime.Now}";
+                Message = $"Unable to connect. Last attempt: {DateTime.Now}";
             }
         }
         public void ReadData()
@@ -80,6 +70,11 @@ namespace ArduReader.ViewModels
 
                         MessageBox.Show(messageBoxText:"Reading Data!");
                     }
+                    else
+                    {
+                        MessageBox.Show(messageBoxText:"Please select the proper device.");
+
+                    }
                 }
             }
             catch (System.Exception e)
@@ -91,7 +86,7 @@ namespace ArduReader.ViewModels
         private void dispatcherTimer_Tick(object? sender, EventArgs e)
         {
             bool haveData = false;
-            data = String.Empty;
+            string? data = String.Empty;
             try
             {
                 while(!haveData)
@@ -102,9 +97,9 @@ namespace ArduReader.ViewModels
                         haveData = true;
                     }
                 }
-                if(haveData)
+                if(haveData && data != null)
                 {
-                    Data += Environment.NewLine;
+                    Data.Add(data);
                 }
             }
             catch (System.Exception)
