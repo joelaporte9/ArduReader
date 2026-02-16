@@ -1,7 +1,5 @@
-using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace ArduReader.Models
 {
@@ -10,6 +8,7 @@ namespace ArduReader.Models
         public SerialPort? serialPort;
         public string? ComPort {get; set;}
         public int BaudRate {get; set;}
+        public string? DeviceName {get; set;}
         public Connection()
         {
         }
@@ -27,6 +26,8 @@ namespace ArduReader.Models
             }
             
         }
+
+
       
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO.Ports;
 using System.Windows;
@@ -9,7 +8,6 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ArduReader.ViewModels
 {
-    
     public class MainViewModel : INotifyPropertyChanged
     {   
         DispatcherTimer? dispatcherTimer;
@@ -17,7 +15,9 @@ namespace ArduReader.ViewModels
         public string[] ports {get; set;} = SerialPort.GetPortNames();
         public int [] baudrate {get; set;} = new [] {75, 150, 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400};
         public Connection Connection { get; set; } = new Connection();
+        public List<string> devicenames {get; set; }
         public ICommand? ConnectCommand { get; }
+        public ICommand? DataCommand { get; }
         private void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
@@ -46,46 +46,72 @@ namespace ArduReader.ViewModels
 
         public MainViewModel()
         {
+            GetDeviceData getDeviceData = new GetDeviceData();
+            devicenames = getDeviceData.GetDeviceNames();
             ConnectCommand = new RelayCommand(Connect);
+            DataCommand = new RelayCommand(ReadData);
+
         }
 
         public void Connect()
-        {
+        {            
             try
             {
                 Connection.OpenSerialCommunication();
-                dispatcherTimer = new DispatcherTimer();
-                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-                dispatcherTimer.Interval = TimeSpan.FromSeconds(intervalCount);
-                dispatcherTimer.Start();
-                Message = $"Connected to {Connection.ComPort} at: {DateTime.Now}";
+                Message = $"Connected to: {Connection.DeviceName} at:{DateTime.Now}";
             }
             catch (System.Exception)
             {
-                
                 Message = $"Unable to connect to COM port. Last attempt: {DateTime.Now}";
             }
-            
         }
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        public void ReadData()
+        {            
+            try
+            {
+                if(Connection.DeviceName != null)
+                {
+                    if(Connection.DeviceName.Contains("Arduino"))
+                    {
+                        dispatcherTimer = new DispatcherTimer();
+                        dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                        dispatcherTimer.Interval = TimeSpan.FromSeconds(intervalCount);
+                        dispatcherTimer.Start();
+
+                        MessageBox.Show(messageBoxText:"Reading Data!");
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e);
+                MessageBox.Show(messageBoxText:"error:" +e.Message);
+            }
+        }
+        private void dispatcherTimer_Tick(object? sender, EventArgs e)
         {
             bool haveData = false;
             data = String.Empty;
-
-            while(!haveData)
+            try
             {
-                data = Connection.serialPort?.ReadLine();
-                if(!string.IsNullOrEmpty(data))
+                while(!haveData)
                 {
-                    haveData = true;
+                    data = Connection.serialPort?.ReadLine();
+                    if(!string.IsNullOrEmpty(data))
+                    {
+                        haveData = true;
+                    }
                 }
-                
+                if(haveData)
+                {
+                    Data += Environment.NewLine;
+                }
             }
-            if(haveData)
+            catch (System.Exception)
             {
-                Data = Data + Environment.NewLine;
+                Console.WriteLine(e);
+                MessageBox.Show(messageBoxText:"error:" + e);
             }
-
         }
         
     }
