@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="ArduReader" Height="470" Width="800">
     <Grid>
+
         <ListBox ItemsSource="{Binding Data}"
             HorizontalAlignment="Left" 
             Margin="10,61,0,0"
@@ -14,13 +15,15 @@
             Width="758" Height="360" 
             ScrollViewer.CanContentScroll="True"/>
         <Button 
-            Content="Export Data" 
+            Content="Export Data"
+            Command="{Binding ExportCommand}" 
             HorizontalAlignment="Left" 
             Margin="685,36,0,0" 
             VerticalAlignment="Top" 
             Width="76"/>
         <Button 
             Content="Import Data" 
+            Command="{Binding ImportCommand}"
             HorizontalAlignment="Left" 
             Margin="605,36,0,0" 
             VerticalAlignment="Top" 
@@ -53,12 +56,7 @@
             Margin="266,12,0,0" 
             VerticalAlignment="Top" 
             Width="120"/>
-        <!-- <Button Content="Refresh"
-            Command="{Binding RefreshCommand}" 
-            HorizontalAlignment="Left" 
-            Margin="438,13,0,0" 
-            VerticalAlignment="Top" 
-            RenderTransformOrigin="-0.211,-0.048" /> -->
+    
         <ComboBox
             ItemsSource="{Binding devicenames}"
             SelectedItem="{Binding Connection.DeviceName}" 
@@ -76,6 +74,12 @@
             Command="{Binding DataCommand}"
             HorizontalAlignment="Left" 
             Margin="440,13,0,0" 
+            VerticalAlignment="Top" 
+            RenderTransformOrigin="-0.211,-0.048" />
+        <Button Content="Close CON"
+            Command="{Binding CloseCommand}"
+            HorizontalAlignment="Left" 
+            Margin="515,13,0,0" 
             VerticalAlignment="Top" 
             RenderTransformOrigin="-0.211,-0.048" />
         <Label 
