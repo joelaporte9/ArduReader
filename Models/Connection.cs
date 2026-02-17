@@ -30,6 +30,20 @@ namespace ArduReader.Models
             }
             
         }
+        public void CloseSerialCommunication()
+        {
+            try
+            {   
+                serialPort?.Close();
+               
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e);
+                MessageBox.Show(messageBoxText:"error:" +e.Message);
+            }
+            
+        }
 
 
       
