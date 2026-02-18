@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using ArduReader.ViewModels;
 
-
 namespace ArduReader;
 
 /// <summary>
