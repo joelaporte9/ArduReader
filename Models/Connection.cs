@@ -20,6 +20,7 @@ namespace ArduReader.Models
                     string comport = DeviceName.Substring(0,4);
                     serialPort = new SerialPort(comport, BaudRate);
                     serialPort.Open();
+                    serialPort.DiscardInBuffer();
                 }
                
             }

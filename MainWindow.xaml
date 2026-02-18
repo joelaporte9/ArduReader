@@ -3,11 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ArduReader"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:oxycontrols="http://oxyplot.org/wpf/contrib"
+        xmlns:local="clr-namespace:ArduReader.ViewModels"
         mc:Ignorable="d"
-        Title="ArduReader" Height="470" Width="800">
+        Title="ArduReader" Height="700" Width="800">
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="225" /> 
+        </Grid.RowDefinitions>
         <ListBox ItemsSource="{Binding Data}"
             HorizontalAlignment="Left" 
             Margin="10,61,0,0"
@@ -56,7 +64,6 @@
             Margin="266,12,0,0" 
             VerticalAlignment="Top" 
             Width="120"/>
-    
         <ComboBox
             ItemsSource="{Binding devicenames}"
             SelectedItem="{Binding Connection.DeviceName}" 
@@ -73,27 +80,32 @@
         <Button Content="Read Data"
             Command="{Binding DataCommand}"
             HorizontalAlignment="Left" 
-            Margin="440,13,0,0" 
+            Margin="503,13,0,0" 
             VerticalAlignment="Top" 
             RenderTransformOrigin="-0.211,-0.048" />
         <Button Content="Close CON"
             Command="{Binding CloseCommand}"
             HorizontalAlignment="Left" 
-            Margin="515,13,0,0" 
+            Margin="440,13,0,0" 
             VerticalAlignment="Top" 
             RenderTransformOrigin="-0.211,-0.048" />
-        <Label 
-            Content="Device State:" 
+        <Button Content="Help"
+            Command="{Binding HelpCommand}"
             HorizontalAlignment="Left" 
-            Margin="585,4,0,0" 
-            VerticalAlignment="Top"/>
-        <RadioButton Content="On" 
-            HorizontalAlignment="Left" 
-            Margin="660,11,0,0" 
-            VerticalAlignment="Top" />
-        <RadioButton Content="Off" 
-            HorizontalAlignment="Left" 
-            Margin="700,11,0,0" 
-            VerticalAlignment="Top" />
+            Margin="570,13,0,0" 
+            VerticalAlignment="Top"
+            RenderTransformOrigin="-0.211,-0.048"/>
+        <oxycontrols:Plot Grid.Row="1">
+            <oxycontrols:Plot.Axes>
+                <oxycontrols:LinearAxis Title="Date Time Now" Position="Bottom" IsZoomEnabled="True" />
+            <oxycontrols:LinearAxis Title="Your Y-axis Title" Position="Left" IsZoomEnabled="True" />
+        </oxycontrols:Plot.Axes>
+        <oxycontrols:Plot.Series>
+            <oxycontrols:LineSeries Title="Plot1"  Color="Black"  ItemsSource="{Binding DataPointList1 }"/>
+            <oxycontrols:LineSeries Title="Plot2"  Color="Green"  ItemsSource="{Binding DataPointList2 }"/>
+            <oxycontrols:LineSeries Title="Plot3"  Color="Blue"   ItemsSource="{Binding DataPointList3 }"/>
+        </oxycontrols:Plot.Series>
+        </oxycontrols:Plot>
+
     </Grid>
 </Window>
