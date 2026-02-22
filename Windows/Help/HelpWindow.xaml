@@ -19,12 +19,12 @@
             Margin="10,20,0,0" 
             VerticalAlignment="Top"/>
         <Label 
-            Content="2.) Select the Baud rate used by your Arduino (Check Arduino code to see - 9600 or 115200 are the most common.)"
+            Content="2.) Select the Baud Rate used by your Arduino (Check Arduino code to see - 9600 and 115200 are most common.)"
             HorizontalAlignment="Left" 
             Margin="10,35,0,0" 
             VerticalAlignment="Top"/>
         <Label 
-            Content="3.) Select 'Connect' - wait for banner message above the textbos and then select 'Read Data' to begin reading data."
+            Content="3.) Select 'Connect' - wait for banner message above the textbox and then select 'Read Data' to begin reading data."
             HorizontalAlignment="Left" 
             Margin="10,50,0,0" 
             VerticalAlignment="Top"/>

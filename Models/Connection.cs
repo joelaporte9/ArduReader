@@ -24,10 +24,9 @@ namespace ArduReader.Models
                 }
                
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Console.WriteLine(e);
-                MessageBox.Show(messageBoxText:"error:" +e.Message);
+                MessageBox.Show(messageBoxText:"error establishing serial connection");
             }
             
         }
@@ -38,10 +37,9 @@ namespace ArduReader.Models
                 serialPort?.Close();
                
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Console.WriteLine(e);
-                MessageBox.Show(messageBoxText:"error:" +e.Message);
+                MessageBox.Show(messageBoxText:"error closing serial connection");
             }
             
         }

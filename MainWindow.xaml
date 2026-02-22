@@ -47,7 +47,6 @@
             Margin="10,35,0,0" 
             VerticalAlignment="Top"/>
         <Label 
-            x:Name="lblMsg" 
             Content="{Binding Message}"
             HorizontalAlignment="Left" 
             Margin="110,35,0,0" 
@@ -95,17 +94,22 @@
             Margin="570,13,0,0" 
             VerticalAlignment="Top"
             RenderTransformOrigin="-0.211,-0.048"/>
-        <oxycontrols:Plot Grid.Row="1">
+        <Button Content="Logs"
+            Command="{Binding LogCommand}"
+            HorizontalAlignment="Left" 
+            Margin="610,13,0,0" 
+            VerticalAlignment="Top"
+            RenderTransformOrigin="-0.211,-0.048"/>
+        <oxycontrols:Plot x:Name="plot" Grid.Row="1">
             <oxycontrols:Plot.Axes>
-                <oxycontrols:LinearAxis Title="Date Time Now" Position="Bottom" IsZoomEnabled="True" />
-            <oxycontrols:LinearAxis Title="Your Y-axis Title" Position="Left" IsZoomEnabled="True" />
+                <oxycontrols:LinearAxis Title="Data Readig Index" Position="Bottom" IsZoomEnabled="True" />
+            <oxycontrols:LinearAxis Title="Data Points" Position="Left" IsZoomEnabled="True" />
         </oxycontrols:Plot.Axes>
         <oxycontrols:Plot.Series>
-            <oxycontrols:LineSeries Title="Plot1"  Color="Black"  ItemsSource="{Binding DataPointList1 }"/>
-            <oxycontrols:LineSeries Title="Plot2"  Color="Green"  ItemsSource="{Binding DataPointList2 }"/>
-            <oxycontrols:LineSeries Title="Plot3"  Color="Blue"   ItemsSource="{Binding DataPointList3 }"/>
+            <oxycontrols:LineSeries Title="Plot1"  Color="Black"  ItemsSource="{Binding DataPointList1}" />
+            <oxycontrols:LineSeries Title="Plot2"  Color="Green"  ItemsSource="{Binding DataPointList2}"/>
+            <oxycontrols:LineSeries Title="Plot3"  Color="Blue"   ItemsSource="{Binding DataPointList3}"/>
         </oxycontrols:Plot.Series>
         </oxycontrols:Plot>
-
     </Grid>
 </Window>
