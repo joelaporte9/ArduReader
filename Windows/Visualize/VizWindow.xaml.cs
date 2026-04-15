@@ -5,9 +5,9 @@ namespace ArduReader.Windows;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class LogWindow : Window
+public partial class VizWindow : Window
 {
-    public LogWindow()
+    public VizWindow()
     {
         InitializeComponent();
     }

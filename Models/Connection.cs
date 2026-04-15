@@ -20,31 +20,24 @@ namespace ArduReader.Models
                     string comport = DeviceName.Substring(0,4);
                     serialPort = new SerialPort(comport, BaudRate);
                     serialPort.Open();
-                    serialPort.DiscardInBuffer();
+                    serialPort?.DiscardInBuffer();
                 }
-               
             }
             catch (System.Exception)
             {
                 MessageBox.Show(messageBoxText:"error establishing serial connection");
             }
-            
         }
         public void CloseSerialCommunication()
         {
             try
             {   
                 serialPort?.Close();
-               
             }
             catch (System.Exception)
             {
                 MessageBox.Show(messageBoxText:"error closing serial connection");
             }
-            
         }
-
-
-      
     }
 }

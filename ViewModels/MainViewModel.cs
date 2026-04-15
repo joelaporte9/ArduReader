@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using ArduReader.Windows;
 using OxyPlot;
 using OxyPlot.Wpf;
+using System.Data;
 
 namespace ArduReader.ViewModels
 {
@@ -19,9 +20,11 @@ namespace ArduReader.ViewModels
         DispatcherTimer? dispatcherTimer;
         int intervalCount = 1;
         public int [] baudrate {get; set;} = [75, 150, 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400];
-        public bool isConnected;
+        private bool isConnected;
+        private bool haveColumns;
+
         public Connection Connection { get; set; } = new Connection();
-        public PlotView PlotView { get; set; } = new PlotView();
+        public DataTable dataTable { get; set; } = new DataTable();
         public List<string> devicenames {get; set; }
         public ICommand? ConnectCommand { get; }
         public ICommand? CloseCommand { get; }
@@ -29,8 +32,8 @@ namespace ArduReader.ViewModels
         public ICommand? ExportCommand { get; }
         public ICommand? ImportCommand { get; }
         public ICommand? HelpCommand { get; }
-
         public ICommand? LogCommand { get; }
+        public ICommand? VizCommand { get; }
 
         private void OnPropertyChanged(string name)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -46,10 +49,8 @@ namespace ArduReader.ViewModels
         }
 
         public ObservableCollection<string> Data { get; set; } = [];
+        public ObservableCollection<string> DataGridData { get; set; } = [];
         public ObservableCollection<string> Logs { get; set; } = [];
-        public ObservableCollection<DataPoint> DataPointList1 {get; set;}= [];
-        public ObservableCollection<DataPoint> DataPointList2 {get; set;} = [];
-        public ObservableCollection<DataPoint> DataPointList3 {get; set;} = [];
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public MainViewModel()
@@ -64,7 +65,7 @@ namespace ArduReader.ViewModels
             CloseCommand = new RelayCommand(CloseConnection);
             HelpCommand = new RelayCommand(OpenHelpWindow);
             LogCommand = new RelayCommand(OpenLogWindow);
-
+            VizCommand = new RelayCommand(OpenVizWindow);
 
         }
 
@@ -78,18 +79,17 @@ namespace ArduReader.ViewModels
                     Message = $"Connected - {Connection.DeviceName} At: {DateTime.Now}";
                     isConnected = true;
                     Logs.Add($"Connected: {isConnected} -- {DateTime.Now}");
-
                 }
                 else
                 {
                     Message = $"Unable to Connect. Last Attempt: {DateTime.Now}";
+                    Logs.Add($"Unable to Connect. Last Attempt: -- {DateTime.Now}");
                 }
-                
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Logs.Add(e.ToString());
                 MessageBox.Show(messageBoxText:"error connecting");
+                Logs.Add($"error connecting -- {DateTime.Now}");
             }
         }
 
@@ -108,13 +108,14 @@ namespace ArduReader.ViewModels
                 {
                     Message = $"Please Connect to Device";
                     MessageBox.Show(messageBoxText:"Must Be Connected Before Disconnecting.");
+                    Logs.Add($"Must Be Connected Before Disconnecting. -- {DateTime.Now}");
                 }
                
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Logs.Add(e.ToString());
                 MessageBox.Show(messageBoxText:"error disconnecting");
+                Logs.Add($"error disconnecting -- {DateTime.Now}");
             }
         }
         public void ReadData()
@@ -127,7 +128,6 @@ namespace ArduReader.ViewModels
                     {
                         dispatcherTimer = new DispatcherTimer();
                         dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
-
                         dispatcherTimer.Interval = TimeSpan.FromSeconds(intervalCount);
                         dispatcherTimer.Start();
 
@@ -138,25 +138,26 @@ namespace ArduReader.ViewModels
                     else
                     {
                         MessageBox.Show(messageBoxText:"Please select the proper device.");
+                        Logs.Add($"Please select the proper device. -- {DateTime.Now}");
+
                     }
                 }
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Logs.Add(e.ToString());
                 MessageBox.Show(messageBoxText:"error with dispatch timer");
+                Logs.Add($"error with dispatch timer. -- {DateTime.Now}");
             }
         }
         
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
         {
-            string pattern = @"[+-]?([0-9]*[.])?[0-9]+"; 
+            string valuePattern = @"[+-]?([0-9]*[.])?[0-9]+"; 
+            string colPattern = @"(\w+)(?=\s*[>:])";
             bool haveData = false;
             string? data = String.Empty;
-
             try
             {
-
                 while(!haveData && isConnected == true)
                 {
                     data = Connection.serialPort?.ReadLine();
@@ -167,30 +168,39 @@ namespace ArduReader.ViewModels
                 }
                 if(haveData && data != null)
                 {
-                    MatchCollection dataList = Regex.Matches(data, pattern);
-                    CloseConnection();
-                    var resultsList = Regex.Matches(data,pattern)
+                    MatchCollection dataList = Regex.Matches(data, valuePattern);
+                    var resultsList = Regex.Matches(data,valuePattern)
                        .Cast<Match>()
                        .Select(m => m.Value)
                        .ToList();
 
-                    for (int i = 0; i < resultsList.Count; i++)
-                    {   
-                        DataPointList1.Add(new DataPoint(Convert.ToDouble(i),Convert.ToDouble(resultsList[0])));
-                        DataPointList2.Add(new DataPoint(Convert.ToDouble(i),Convert.ToDouble(resultsList[1])));  
-                        DataPointList3.Add(new DataPoint(Convert.ToDouble(i),Convert.ToDouble(resultsList[2])));
-                    }
+                    MatchCollection columnList = Regex.Matches(data, colPattern);
+                    var colList = Regex.Matches(data,colPattern)
+                       .Cast<Match>()
+                       .Select(m => m.Value)
+                       .ToList();
+                                    
                     Data.Add(data);
-                    if(DataPointList1 != null && DataPointList2 != null && DataPointList3 != null)
+
+                    if(!haveColumns)
                     {
-                        PlotView.InvalidatePlot(true);
+                        foreach (var item1 in colList)
+                        {
+                            dataTable.Columns.Add(item1);
+
+                        }
+                        haveColumns = true;
+                    }
+                    if(haveColumns)
+                    {
+                        dataTable.Rows.Add(resultsList.ToArray());
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
-                Logs.Add(ex.ToString());
                 MessageBox.Show(messageBoxText:"error reading device data");
+                Logs.Add($"error reading device data. -- {DateTime.Now}");
             }
         }
 
@@ -221,12 +231,11 @@ namespace ArduReader.ViewModels
                         Logs.Add($"Data saved to {filename}");
                     }
                 }
-                
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Logs.Add(e.ToString());
                 MessageBox.Show(messageBoxText:"error exporting data");
+                Logs.Add($"error exporting data -- {DateTime.Now}");
             }
         }
         private void ImportData()
@@ -247,12 +256,12 @@ namespace ArduReader.ViewModels
                     }
                     Message = $"Viewing Imported Data - {DateTime.Now}";
                     Logs.Add($"Viewing Imported Data - {DateTime.Now}");
-
                 }
             }
             catch (System.Exception)
             {
                 MessageBox.Show(messageBoxText:"error importing data");
+                Logs.Add($"error importing data. -- {DateTime.Now}");
             }
         }
         private void OpenHelpWindow()
@@ -262,10 +271,10 @@ namespace ArduReader.ViewModels
                 HelpWindow helpWindow = new();
                 helpWindow.ShowDialog();
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Logs.Add($"{e.ToString()} -- {DateTime.Now}");
                 MessageBox.Show(messageBoxText:"error opening help page");
+                Logs.Add($"error opening help page. -- {DateTime.Now}");
             }
         }
         private void OpenLogWindow()
@@ -276,13 +285,27 @@ namespace ArduReader.ViewModels
                 {
                     DataContext = this
                 };
-                logWindow.ShowDialog();
+                logWindow.Show();
             }
             catch (System.Exception)
             {
                 MessageBox.Show(messageBoxText:"error opening logs");
             }
         }
-        
+        private void OpenVizWindow()
+        {
+            try
+            {
+                VizWindow vizWindow = new()
+                {
+                    DataContext = this
+                };
+                vizWindow.Show();
+            }
+            catch (System.Exception)
+            {
+                MessageBox.Show(messageBoxText:"error opening visualization page");
+            }
+        }
     }
 }

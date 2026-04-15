@@ -3,39 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:oxy="http://oxyplot.org/wpf"
-        xmlns:oxycontrols="http://oxyplot.org/wpf/contrib"
         xmlns:local="clr-namespace:ArduReader.ViewModels"
         mc:Ignorable="d"
-        Title="ArduReader" Height="700" Width="800">
+        Title="ArduReader" Height="600" Width="800">
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="225" /> 
-        </Grid.RowDefinitions>
         <ListBox ItemsSource="{Binding Data}"
             HorizontalAlignment="Left" 
-            Margin="10,61,0,0"
+            Margin="10,100,0,0"
             VerticalAlignment="Top" 
-            Width="758" Height="360" 
+            Width="758" Height="400" 
             ScrollViewer.CanContentScroll="True"/>
         <Button 
             Content="Export Data"
             Command="{Binding ExportCommand}" 
             HorizontalAlignment="Left" 
-            Margin="685,36,0,0" 
+             Margin="600,70,0,0" 
             VerticalAlignment="Top" 
             Width="76"/>
         <Button 
             Content="Import Data" 
             Command="{Binding ImportCommand}"
             HorizontalAlignment="Left" 
-            Margin="605,36,0,0" 
+            Margin="520,70,0,0" 
             VerticalAlignment="Top" 
             Width="76" />
+        <Button 
+            Content="Visualize"
+            Command="{Binding VizCommand}" 
+            HorizontalAlignment="Left" 
+             Margin="680,70,0,0" 
+            VerticalAlignment="Top" 
+            Width="76"/>
         <Label 
             Content="COM port:"
             HorizontalAlignment="Left" 
@@ -90,26 +91,15 @@
             RenderTransformOrigin="-0.211,-0.048" />
         <Button Content="Help"
             Command="{Binding HelpCommand}"
-            HorizontalAlignment="Left" 
-            Margin="570,13,0,0" 
+            HorizontalAlignment="Left"
+            Margin="730,2,0,0" 
             VerticalAlignment="Top"
             RenderTransformOrigin="-0.211,-0.048"/>
         <Button Content="Logs"
             Command="{Binding LogCommand}"
-            HorizontalAlignment="Left" 
-            Margin="610,13,0,0" 
+            HorizontalAlignment="Left"
+            Margin="700,2,0,0"  
             VerticalAlignment="Top"
             RenderTransformOrigin="-0.211,-0.048"/>
-        <oxycontrols:Plot x:Name="plot" Grid.Row="1">
-            <oxycontrols:Plot.Axes>
-                <oxycontrols:LinearAxis Title="Data Readig Index" Position="Bottom" IsZoomEnabled="True" />
-            <oxycontrols:LinearAxis Title="Data Points" Position="Left" IsZoomEnabled="True" />
-        </oxycontrols:Plot.Axes>
-        <oxycontrols:Plot.Series>
-            <oxycontrols:LineSeries Title="Plot1"  Color="Black"  ItemsSource="{Binding DataPointList1}" />
-            <oxycontrols:LineSeries Title="Plot2"  Color="Green"  ItemsSource="{Binding DataPointList2}"/>
-            <oxycontrols:LineSeries Title="Plot3"  Color="Blue"   ItemsSource="{Binding DataPointList3}"/>
-        </oxycontrols:Plot.Series>
-        </oxycontrols:Plot>
     </Grid>
 </Window>
